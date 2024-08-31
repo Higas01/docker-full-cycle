@@ -1,0 +1,13 @@
+FROM golang:1.22-bullseye AS build
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN go build index.go
+
+FROM scratch
+
+COPY --from=build /usr/src/app/index .
+
+CMD [ "/index" ]

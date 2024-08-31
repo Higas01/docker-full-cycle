@@ -1,0 +1,16 @@
+services:
+  laravel:
+    build: 
+      context: ./laravel
+      dockerfile: Dockerfile.prod
+    image: higas/laravel:latest
+    container_name: laravel
+    
+  nginx:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile.prod
+    image: higas/nginx:latest
+    container_name: nginx
+    ports:
+      - 8080:80

@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - ./node/:/usr/src/app
+    entrypoint: >
+      sh -c "
+      wait-port db:3306 && node index.js"
+    ports:
+      - 3000:3000
+    tty: true
+    container_name: app
+    depends_on:
+      - db
+    expose:
+      - 3000
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_DATABASE=desafio2
+      - MYSQL_ROOT_PASSWORD=root
+    expose:
+      - 3306
+    container_name: db
+
+  nginx:
+    build:
+      context: .
+      dockerfile: dockerfile.nginx
+    ports:
+      - 8080:80
+    container_name: nginx
+    entrypoint: >
+      sh -c "
+      wait-for app:3000 && nginx -g 'daemon off;'"
+
